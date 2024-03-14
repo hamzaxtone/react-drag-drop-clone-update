@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const RightPanel = ({ items, onExport, onImport }) => {
+const RightPanel = ({ items, onExport, onImport, onSaveAsPNG }) => {
   const [jsonTemplate, setJsonTemplate] = useState('');
 
   const exportTemplate = () => {
@@ -12,15 +12,14 @@ const RightPanel = ({ items, onExport, onImport }) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    console.log(event.target.files);
     if (event && event.target && event.target.files && event.target.files.length > 0) {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const content = e.target.result;
-      onImport(content);
-    };
-    reader.readAsText(file);
-}
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target.result;
+        onImport(content);
+      };
+      reader.readAsText(file);
+    }
   };
 
   return (
@@ -29,6 +28,7 @@ const RightPanel = ({ items, onExport, onImport }) => {
       <button onClick={exportTemplate}>Export JSON</button>
       <input type="file" accept=".json" onChange={handleFileChange} />
       <pre>{JSON.stringify(items, null, 2)}</pre>
+      <button onClick={onSaveAsPNG}>Save Canvas as PNG</button>
     </div>
   );
 };

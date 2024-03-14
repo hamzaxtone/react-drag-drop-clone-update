@@ -68,12 +68,40 @@ const App = () => {
     document.body.removeChild(element);
   };
 
+
+  // Function to save canvas as PNG
+  const handleSaveAsPNG = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 800; // Adjust canvas width as needed
+    canvas.height = 600; // Adjust canvas height as needed
+    const context = canvas.getContext('2d');
+
+    // Draw each item onto the canvas
+    items.forEach((item) => {
+      context.fillStyle = item.color || '#000000';
+      context.fillRect(item.x, item.y, 50, 50); // Example size, adjust as needed
+    });
+
+    // Convert canvas to PNG data URL
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Create a download link for the PNG image
+    const link = document.createElement('a');
+    link.href = dataURL;
+    link.download = 'canvas_preview.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
       <LeftPanel onDragStart={handleDragStart} />
       {/* Pass updateItems function to Canvas */}
       <Canvas items={items} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} />
-      <RightPanel items={items} onExport={handleExport} onImport={handleImport} />
+      {/* <RightPanel items={items} onExport={handleExport} onImport={handleImport} /> */}
+      <RightPanel items={items} onExport={handleExport} onImport={handleImport} onSaveAsPNG={handleSaveAsPNG} />
+
     </div>
   );
 };
