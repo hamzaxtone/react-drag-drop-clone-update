@@ -1,7 +1,9 @@
 /*! CSS Used from: Embedded */
-
+.canvasTop{
+    position: relative;
+}
 /*! CSS Used from: Embedded */
-.css-1g2lq23{background:white;border-bottom:1px solid rgba(57, 76, 96, 0.15);height:50px;overflow-x:auto;flex-shrink:0;}
+.css-1g2lq23{background:white;border-bottom:1px solid rgba(57, 76, 96, 0.15);height:50px;flex-shrink:0;}
 @media (max-width: 900px){
 .css-1g2lq23{position:fixed;bottom:0px;left:0px;right:0px;background:rgb(255, 255, 255);display:none;-webkit-box-pack:center;justify-content:center;z-index:20;height:72px;}
 }

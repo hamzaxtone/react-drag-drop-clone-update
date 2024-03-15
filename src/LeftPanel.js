@@ -109,7 +109,6 @@ const LeftPanel = ({ onDragStart }) => {
         </ul>
       </div>
     </div>
-    <div id="settings" className="css-1up8n9n"></div>
   </div>
 </section>
     {/* <div style={{ flex: 1, borderRight: '1px solid black', padding: '20px' }}>

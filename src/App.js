@@ -4,6 +4,7 @@ import Canvas from './Canvas';
 import RightPanel from './RightPanel';
 import MainTop from './mainTop';
 import CanvasTop from './CanvasTop';
+import Layers from './Layers';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toPng } from 'html-to-image';
@@ -15,7 +16,7 @@ const App = () => {
     { id: 1, name: 'Chair', x: 50, y: 50 },
     { id: 2, name: 'Table', x: 150, y: 150 }
   ]);
-
+  
   // Counter for generating unique IDs
   const [idCounter, setIdCounter] = useState(3); // Start from 3 if you already have items with IDs 1 and 2
 
@@ -27,7 +28,7 @@ const App = () => {
   const handleDrop = (newItem) => {
     // Assign a unique ID to the dropped item
     newItem.id = idCounter;
-    setIdCounter(idCounter + 1); // Increment the counter for the next item
+    setIdCounter(idCounter + 1); 
 
     setItems([...items, newItem]);
   };
@@ -41,13 +42,13 @@ const App = () => {
     setItems(updatedItems);
   };
 
-  // Function to handle exporting JSON template
+  
   const handleExport = () => {
     const json = JSON.stringify(items, null, 2);
     downloadJson(json, 'template.json');
   };
 
-  // Function to handle importing JSON template
+  
   const handleImport = (content,event) => {
 
     if (content) {
@@ -64,7 +65,7 @@ const App = () => {
   };
   
 
-  // Function to download JSON file
+  
   const downloadJson = (content, fileName) => {
     const element = document.createElement('a');
     const file = new Blob([content], { type: 'application/json' });
@@ -75,26 +76,9 @@ const App = () => {
     document.body.removeChild(element);
   };
 
-  // const handleSaveAsPNG = async () => {
-  //   const element = document.getElementById('print'),
-  //   canvas = await html2canvas(element),
-  //   data = canvas.toDataURL('image/jpg'),
-  //   link = document.createElement('a');
-
-  //   link.href = data;
-  //   link.download = 'downloaded-image.jpg';
-
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  // };
-  // Function to save canvas as PNG
-  const canvasRef = useRef(null);  // Define canvasRef using useRef
-  //const [canvasRef, setcanvasRef] = useState(null);
-  // const canvasRefGet = (canvasRef) => {
-  //   // Save the canvasRef to use it in handleSaveAsPNG
-  //   setcanvasRef(canvasRef.current);
-  // };
+ 
+  const canvasRef = useRef(null);  
+  
   const handleSaveAsPNG = async () => {
     console.log('canvasRef');
     console.log(canvasRef.current);
@@ -112,14 +96,14 @@ const App = () => {
   };
   const handleSaveAsPNG_custom = () => {
     const canvas = document.createElement('canvas');
-    canvas.width = 800; // Adjust canvas width as needed
-    canvas.height = 600; // Adjust canvas height as needed
+    canvas.width = 800; 
+    canvas.height = 600; 
     const context = canvas.getContext('2d');
 
     // Draw each item onto the canvas
     items.forEach((item) => {
       context.fillStyle = item.color || '#000000';
-      context.fillRect(item.x, item.y, 50, 50); // Example size, adjust as needed
+      context.fillRect(item.x, item.y, 50, 50); 
     });
 
     // Convert canvas to PNG data URL
@@ -167,6 +151,10 @@ const App = () => {
     }
   };
 
+  
+
+  
+
   return (
     <div className='flex-column d-flex vh-100'>
       <MainTop 
@@ -179,9 +167,10 @@ const App = () => {
       <LeftPanel onDragStart={handleDragStart} />
       <div className='d-flex flex-column flex-grow-1'>
         {/* Pass updateItems function to Canvas */}
-        <CanvasTop></CanvasTop>
+        <CanvasTop items={items}></CanvasTop>
         <Canvas items={items} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} canvasRef={canvasRef} />
       </div>
+      
       {/* <RightPanel items={items} onExport={handleExport} onImport={handleImport} /> */}
       {/* <RightPanel 
         items={items} 

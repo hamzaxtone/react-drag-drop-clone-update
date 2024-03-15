@@ -4,6 +4,7 @@ import './index.css';
 import './mainTop.css';
 import './leftPanel.css';
 import './CanvasTop.css';
+import './Layers.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

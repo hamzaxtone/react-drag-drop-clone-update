@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
+import Layers from './Layers';
 
-const CanvasTop = () => {
+const CanvasTop = ({items}) => {
+// State for managing layers visibility
+const [showLayers, setShowLayers] = useState(false);
+  const toggleLayers = ({showLayers}) => {
+    setShowLayers(!showLayers);
+  };
     return(
         <section id='canvasTop' className="css-1g2lq23 flex-grow-1 canvasTop">
             <div className="css-4ns52">
@@ -9,9 +15,14 @@ const CanvasTop = () => {
                     <div className="css-s7vhwb"><span className="css-1n30axn">Position</span></div>
                     <div className="css-1c0qma8"></div>
                     <div className="css-s7vhwb"><span className="css-1n30axn">Resize</span></div>
+                    <div className="css-1c0qma8"></div>
+                    <div className="css-s7vhwb"><span className="css-1n30axn">Layers</span></div>
                 </div>
                 </div>
+                <button onClick={toggleLayers}>Toggle Layers</button>
+                {showLayers && <Layers items={items} />}
             </div>
+            
             </section>
 
     );

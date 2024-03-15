@@ -19,7 +19,8 @@ const TopPanel = ({ positionX, positionY, positionZ, color, onPositionXChange, o
 
   return (
     <section className='TopPanel bg-white px-3 py-2'>
-      <table>
+      <div className='d-flex flex-wrap'>
+      <table className='w-50 table table-bordered'>
   <tbody>
     <tr>
       <td>
@@ -73,7 +74,7 @@ const TopPanel = ({ positionX, positionY, positionZ, color, onPositionXChange, o
       <td>
         <label htmlFor="color">Color:</label>
       </td>
-      <td colSpan="2">
+      <td >
         <input
           id="color"
           type="color"
@@ -81,10 +82,11 @@ const TopPanel = ({ positionX, positionY, positionZ, color, onPositionXChange, o
           onChange={handleColorChange}
         />
       </td>
+      <td>{color}</td>
     </tr>
   </tbody>
-</table>
-
+      </table>
+</div>
     </section>
   );
 };

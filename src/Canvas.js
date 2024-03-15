@@ -167,11 +167,11 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
         onColorChange={handleColorChange}
       />
       {/* <button onClick={handleSaveAsPNG}>Save Canvas as PNG</button> */}
-      
+      <section className='px-5 py-5'>
       <div
       ref={canvasRef}
         id='print'
-        className='mx-5'
+        className='mw-100'
         style={{
           position: 'relative',
           width: '100%',
@@ -214,7 +214,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
               ): item.name === 'Table' ? (
                 <FontAwesomeIcon title={item.name} color={item.color} size='6x' icon={faTable} />
               )
-              : item.name === 'Text' ? (
+              : item.name === 'Image' ? (
                 <img src='https://images.unsplash.com/photo-1709136494561-d98ea74c9431?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200' />
                 
               )
@@ -238,6 +238,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
           </div>
         ))}
       </div>
+      </section>
       </div>
     </section>
   );
