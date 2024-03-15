@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const RightPanel = ({ items, onExport, onImport, onSaveAsPNG }) => {
+const RightPanel = ({ items, onExport, onImport, onSaveAsPNG,onSaveAsPDF  }) => {
   const [jsonTemplate, setJsonTemplate] = useState('');
 
   const exportTemplate = () => {
@@ -27,6 +27,7 @@ const RightPanel = ({ items, onExport, onImport, onSaveAsPNG }) => {
       <h2>Right Panel</h2>
       <button onClick={exportTemplate}>Export JSON</button>
       <button onClick={onSaveAsPNG}>Save Canvas as PNG</button>
+      <button onClick={onSaveAsPDF}>Save Canvas as PDF</button>
       <input type="file" accept=".json" onChange={handleFileChange} />
       <pre>{JSON.stringify(items, null, 2)}</pre>
       

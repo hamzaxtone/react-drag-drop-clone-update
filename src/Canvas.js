@@ -24,6 +24,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   }, [items, onUpdateItems]);
 
   const handleDragStart = (e, item) => {
+    console.log(item.name);
     e.dataTransfer.setData('text/plain', item.name);
     setDraggedItem(item);
   };
@@ -112,7 +113,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   
   const handleMouseMove = (e) => {
     if (draggedItem) {
-      console.log("Mouse move", e.clientX, e.clientY);
+      //console.log("Mouse move", e.clientX, e.clientY);
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left - draggedItem.offsetX;
       const y = e.clientY - rect.top - draggedItem.offsetY;
@@ -123,9 +124,10 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
     }
   };
   
-  const handleMouseUp = () => {
-    console.log("Mouse up");
-    setDraggedItem(null);
+  const handleMouseUp = (e, item) => {
+    console.log("Mouse Up", item);
+    //console.log("Mouse up");
+    //setDraggedItem(null);
   };
   
   // const handleSaveAsPNG = async () => {
@@ -145,7 +147,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
     return canvasRef;
   }
   return (
-    <div>
+    <section id='Canvas' className='flex-grow-1 Canvas'>
       <TopPanel
         positionX={positionX}
         positionY={positionY}
@@ -164,6 +166,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
         style={{
           position: 'relative',
           width: '800px',
+          background:'#ffffff',
           height: '600px',
           border: '1px solid black',
           cursor: 'pointer',
@@ -176,6 +179,8 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
           <div
             key={index}
             draggable
+            
+            onMouseUp={(e) => handleMouseUp(e, item)}
             onMouseDown={(e) => handleMouseDown(e, item)}
             onDragStart={(e) => handleDragStart(e, item)}
             onClick={(e) => handleItemClick(e, item)}
@@ -209,7 +214,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

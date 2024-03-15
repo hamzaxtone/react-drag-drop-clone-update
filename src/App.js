@@ -2,9 +2,13 @@ import React, { useState,useRef } from 'react';
 import LeftPanel from './LeftPanel';
 import Canvas from './Canvas';
 import RightPanel from './RightPanel';
+import MainTop from './mainTop';
+import CanvasTop from './CanvasTop';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toPng } from 'html-to-image';
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 const App = () => {
   const [items, setItems] = useState([
@@ -16,6 +20,7 @@ const App = () => {
   const [idCounter, setIdCounter] = useState(3); // Start from 3 if you already have items with IDs 1 and 2
 
   const handleDragStart = (e, item) => {
+    console.log(item.name);
     e.dataTransfer.setData('text', item.name);
   };
 
@@ -129,14 +134,63 @@ const App = () => {
     document.body.removeChild(link);
   };
 
-  return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <LeftPanel onDragStart={handleDragStart} />
-      {/* Pass updateItems function to Canvas */}
-      <Canvas items={items} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} canvasRef={canvasRef} />
-      {/* <RightPanel items={items} onExport={handleExport} onImport={handleImport} /> */}
-      <RightPanel items={items} onExport={handleExport} onImport={handleImport} onSaveAsPNG={handleSaveAsPNG} />
+  const handleSaveAsPDF = () => {
+    if (canvasRef.current) {
+      const input = canvasRef.current;
+      html2canvas(input)
+        .then((canvas) => {
+          const imgData = canvas.toDataURL('image/png');
+          const pdf = new jsPDF();
+          const imgWidth = 210;
+          const pageHeight = 295;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+          let heightLeft = imgHeight;
+          let position = 0;
 
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+
+          while (heightLeft >= 0) {
+            position = heightLeft - imgHeight;
+            pdf.addPage();
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+          }
+
+          pdf.save('canvas_preview.pdf');
+        })
+        .catch((error) => {
+          console.error('Error exporting canvas as PDF:', error);
+        });
+    } else {
+      console.error('Canvas reference is not available.');
+    }
+  };
+
+  return (
+    <div className='flex-column d-flex vh-100'>
+      <MainTop 
+        items={items} 
+        onExport={handleExport} 
+        onImport={handleImport} 
+        onSaveAsPNG={handleSaveAsPNG}
+        onSaveAsPDF={handleSaveAsPDF} />
+      <div className='bg-light d-flex flex-row overflow-auto'>
+      <LeftPanel onDragStart={handleDragStart} />
+      <div className='d-flex flex-column flex-grow-1'>
+        {/* Pass updateItems function to Canvas */}
+        <CanvasTop></CanvasTop>
+        <Canvas items={items} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} canvasRef={canvasRef} />
+      </div>
+      {/* <RightPanel items={items} onExport={handleExport} onImport={handleImport} /> */}
+      {/* <RightPanel 
+        items={items} 
+        onExport={handleExport} 
+        onImport={handleImport} 
+        onSaveAsPNG={handleSaveAsPNG}
+        onSaveAsPDF={handleSaveAsPDF}
+        /> */}
+    </div>
     </div>
   );
 };

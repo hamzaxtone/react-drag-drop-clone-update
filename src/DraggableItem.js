@@ -2,6 +2,7 @@ import React from 'react';
 
 const DraggableItem = ({ itemName, onDragStart, children }) => {
   const handleDragStart = (e) => {
+    console.log(itemName);
     e.dataTransfer.setData('text', itemName);
     onDragStart(e, { name: itemName });
   };
