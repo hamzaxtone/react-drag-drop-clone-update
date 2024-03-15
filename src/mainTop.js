@@ -63,7 +63,9 @@ const MainTop = ({ items, onExport, onImport, onSaveAsPNG,onSaveAsPDF  }) => {
          </div>
          Preview
       </div> */}
+      {/* <pre>{JSON.stringify(items, null, 2)}</pre> */}
    </div>
+   
 </div>
         
     );

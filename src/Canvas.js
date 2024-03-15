@@ -95,6 +95,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   };
 
   const handleRemoveItemClick = (itemId) => {
+    console.log('handleRemoveItemClick');
     onRemoveItem(itemId);
     setSelectedItem(null);
   };
@@ -146,8 +147,15 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   const pngExportRef = () => {
     return canvasRef;
   }
+  // const [canvasWidth, setcanvasWidth] = useState(null);
+  
+  // useEffect((canvasRef) => {
+  //   console.log(canvasRef.current.clientWidth);
+  // },[canvasRef]);
+
   return (
     <section id='Canvas' className='flex-grow-1 Canvas'>
+      <div className='px-5'>
       <TopPanel
         positionX={positionX}
         positionY={positionY}
@@ -165,7 +173,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
         id='print'
         style={{
           position: 'relative',
-          width: '800px',
+          width: '100%',
           background:'#ffffff',
           height: '600px',
           border: '1px solid black',
@@ -178,12 +186,9 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
         {items.map((item, index) => (
           <div
             key={index}
-            draggable
             
-            onMouseUp={(e) => handleMouseUp(e, item)}
-            onMouseDown={(e) => handleMouseDown(e, item)}
-            onDragStart={(e) => handleDragStart(e, item)}
-            onClick={(e) => handleItemClick(e, item)}
+            className='draggedItem'
+            
             style={{
               position: 'absolute',
               left: item.x,
@@ -196,11 +201,24 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
               outlineOffset: selectedItem === item ? '-3px' : '0px',
             }}
           >
+            <div className='draggableItem'
+              draggable
+              onMouseUp={(e) => handleMouseUp(e, item)}
+              onMouseDown={(e) => handleMouseDown(e, item)}
+              onDragStart={(e) => handleDragStart(e, item)}
+              onClick={(e) => handleItemClick(e, item)}
+            >
             {item.name === 'Chair' ? (
-              <FontAwesomeIcon title={item.name} color={item.color} size='3x' icon={faChair} />
-            ) : (
-              <FontAwesomeIcon title={item.name} color={item.color} size='6x' icon={faTable} />
-            )}
+                <FontAwesomeIcon title={item.name} color={item.color} size='3x' icon={faChair} />
+              ): item.name === 'Table' ? (
+                <FontAwesomeIcon title={item.name} color={item.color} size='6x' icon={faTable} />
+              )
+              : item.name === 'Text' ? (
+                <h6>Text</h6>
+              ) : (
+                <h6>{item.name}</h6>
+              )}
+            </div>
             {selectedItem === item && (
               <FontAwesomeIcon
                 style={{
@@ -213,6 +231,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
             )}
           </div>
         ))}
+      </div>
       </div>
     </section>
   );

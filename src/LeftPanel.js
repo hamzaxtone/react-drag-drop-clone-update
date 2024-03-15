@@ -41,12 +41,14 @@ const LeftPanel = ({ onDragStart }) => {
             <span className="css-184r8y9">Template</span>
           </li>
           <li className="css-i9ow3q element">
+          <DraggableItem itemName="Text" onDragStart={onDragStart}>
             <div className="css-16iqw5x">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1em" height="1em">
                 <path d="M208 56v32a8 8 0 0 1-16 0V64h-56v128h24a8 8 0 0 1 0 16H96a8 8 0 0 1 0-16h24V64H64v24a8 8 0 0 1-16 0V56a8 8 0 0 1 8-8h144a8 8 0 0 1 8 8Z"></path>
               </svg>
             </div>
             <span className="css-184r8y9">Text</span>
+            </DraggableItem>
           </li>
           <li className="css-i9ow3q element">
           <DraggableItem itemName="Chair" onDragStart={onDragStart}>
@@ -71,12 +73,14 @@ const LeftPanel = ({ onDragStart }) => {
             <span className="css-184r8y9">Frame</span> */}
           </li>
           <li className="css-i9ow3q element">
+          <DraggableItem itemName="Image" onDragStart={onDragStart}>
             <div className="css-16iqw5x">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1em" height="1em">
                 <path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 16v102.75l-26.07-26.06a16 16 0 0 0-22.63 0l-20 20-44-44a16 16 0 0 0-22.62 0L40 149.37V56ZM40 172l52-52 80 80H40Zm176 28h-21.37l-36-36 20-20L216 181.38V200Zm-72-100a12 12 0 1 1 12 12 12 12 0 0 1-12-12Z"></path>
               </svg>
             </div>
             <span className="css-184r8y9">Image</span>
+            </DraggableItem>
           </li>
           <li className="css-i9ow3q element">
             <div className="css-16iqw5x">
