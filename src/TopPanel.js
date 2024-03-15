@@ -18,32 +18,74 @@ const TopPanel = ({ positionX, positionY, positionZ, color, onPositionXChange, o
   };
 
   return (
-    <div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>
-          Position X:
-          <input type="range" min="0" max="800" value={positionX} onChange={handlePositionXChange} />
-        </label>
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>
-          Position Y:
-          <input type="range" min="0" max="600" value={positionY} onChange={handlePositionYChange} />
-        </label>
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>
-          Position Z:
-          <input type="range" min="0" max="100" value={positionZ} onChange={handlePositionZChange} />
-        </label>
-      </div>
-      <div style={{ marginBottom: '10px' }}>
-        <label>
-          Color:
-          <input type="color" value={color} onChange={handleColorChange} />
-        </label>
-      </div>
-    </div>
+    <section className='TopPanel bg-white px-3 py-2'>
+      <table>
+  <tbody>
+    <tr>
+      <td>
+        <label htmlFor="positionX">Position X:</label>
+      </td>
+      <td>
+        <input
+          id="positionX"
+          type="range"
+          min="0"
+          max="800"
+          value={positionX}
+          onChange={handlePositionXChange}
+        />
+      </td>
+      <td>{positionX}px</td>
+    </tr>
+    <tr>
+      <td>
+        <label htmlFor="positionY">Position Y:</label>
+      </td>
+      <td>
+        <input
+          id="positionY"
+          type="range"
+          min="0"
+          max="600"
+          value={positionY}
+          onChange={handlePositionYChange}
+        />
+      </td>
+      <td>{positionY}px</td>
+    </tr>
+    <tr>
+      <td>
+        <label htmlFor="positionZ">Position Z:</label>
+      </td>
+      <td>
+        <input
+          id="positionZ"
+          type="range"
+          min="0"
+          max="100"
+          value={positionZ}
+          onChange={handlePositionZChange}
+        />
+      </td>
+      <td>{positionZ}</td>
+    </tr>
+    <tr>
+      <td>
+        <label htmlFor="color">Color:</label>
+      </td>
+      <td colSpan="2">
+        <input
+          id="color"
+          type="color"
+          value={color}
+          onChange={handleColorChange}
+        />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+    </section>
   );
 };
 

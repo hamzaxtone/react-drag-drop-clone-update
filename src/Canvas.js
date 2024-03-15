@@ -155,7 +155,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
 
   return (
     <section id='Canvas' className='flex-grow-1 Canvas'>
-      <div className='px-5'>
+      <div className='px-0'>
       <TopPanel
         positionX={positionX}
         positionY={positionY}
@@ -171,6 +171,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
       <div
       ref={canvasRef}
         id='print'
+        className='mx-5'
         style={{
           position: 'relative',
           width: '100%',
@@ -214,7 +215,12 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
                 <FontAwesomeIcon title={item.name} color={item.color} size='6x' icon={faTable} />
               )
               : item.name === 'Text' ? (
+                <img src='https://images.unsplash.com/photo-1709136494561-d98ea74c9431?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200' />
+                
+              )
+              : item.name === 'Text' ? (
                 <h6>Text</h6>
+                
               ) : (
                 <h6>{item.name}</h6>
               )}
