@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState,useRef } from 'react';
 import LeftPanel from './LeftPanel';
 import Canvas from './Canvas';
 import RightPanel from './RightPanel';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { toPng } from 'html-to-image';
+
 
 const App = () => {
   const [items, setItems] = useState([
@@ -68,9 +70,42 @@ const App = () => {
     document.body.removeChild(element);
   };
 
+  // const handleSaveAsPNG = async () => {
+  //   const element = document.getElementById('print'),
+  //   canvas = await html2canvas(element),
+  //   data = canvas.toDataURL('image/jpg'),
+  //   link = document.createElement('a');
 
+  //   link.href = data;
+  //   link.download = 'downloaded-image.jpg';
+
+  //   document.body.appendChild(link);
+  //   link.click();
+  //   document.body.removeChild(link);
+  // };
   // Function to save canvas as PNG
-  const handleSaveAsPNG = () => {
+  const canvasRef = useRef(null);  // Define canvasRef using useRef
+  //const [canvasRef, setcanvasRef] = useState(null);
+  // const canvasRefGet = (canvasRef) => {
+  //   // Save the canvasRef to use it in handleSaveAsPNG
+  //   setcanvasRef(canvasRef.current);
+  // };
+  const handleSaveAsPNG = async () => {
+    console.log('canvasRef');
+    console.log(canvasRef.current);
+    try {
+      const dataUrl = await toPng(canvasRef.current);
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = 'asdascanvas_preview.png';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error saving canvas as PNG:', error);
+    }
+  };
+  const handleSaveAsPNG_custom = () => {
     const canvas = document.createElement('canvas');
     canvas.width = 800; // Adjust canvas width as needed
     canvas.height = 600; // Adjust canvas height as needed
@@ -98,7 +133,7 @@ const App = () => {
     <div style={{ display: 'flex', height: '100vh' }}>
       <LeftPanel onDragStart={handleDragStart} />
       {/* Pass updateItems function to Canvas */}
-      <Canvas items={items} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} />
+      <Canvas items={items} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} canvasRef={canvasRef} />
       {/* <RightPanel items={items} onExport={handleExport} onImport={handleImport} /> */}
       <RightPanel items={items} onExport={handleExport} onImport={handleImport} onSaveAsPNG={handleSaveAsPNG} />
 

@@ -26,9 +26,10 @@ const RightPanel = ({ items, onExport, onImport, onSaveAsPNG }) => {
     <div style={{ flex: 1, borderLeft: '1px solid black', padding: '20px' }}>
       <h2>Right Panel</h2>
       <button onClick={exportTemplate}>Export JSON</button>
+      <button onClick={onSaveAsPNG}>Save Canvas as PNG</button>
       <input type="file" accept=".json" onChange={handleFileChange} />
       <pre>{JSON.stringify(items, null, 2)}</pre>
-      <button onClick={onSaveAsPNG}>Save Canvas as PNG</button>
+      
     </div>
   );
 };

@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import TopPanel from './TopPanel';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChair, faRemove, faTable } from '@fortawesome/free-solid-svg-icons';
+// import { toPng } from 'html-to-image';
 
-const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems }) => {
+const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
+  //const canvasRef = useRef(null);
+  const [context, setContext] = useState(null);
+  // useEffect(() => {
+  //   onSaveCanvasRef(canvasRef);
+  //   //console.log(canvasRef);
+  // }, [onSaveCanvasRef]);
+
   const [draggedItem, setDraggedItem] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [positionX, setPositionX] = useState(0);
@@ -120,8 +128,22 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems }) => {
     setDraggedItem(null);
   };
   
-  
-
+  // const handleSaveAsPNG = async () => {
+  //   try {
+  //     const dataUrl = await toPng(canvasRef.current);
+  //     const link = document.createElement('a');
+  //     link.href = dataUrl;
+  //     link.download = 'asdascanvas_preview.png';
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     document.body.removeChild(link);
+  //   } catch (error) {
+  //     console.error('Error saving canvas as PNG:', error);
+  //   }
+  // };
+  const pngExportRef = () => {
+    return canvasRef;
+  }
   return (
     <div>
       <TopPanel
@@ -134,7 +156,11 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems }) => {
         onPositionZChange={handlePositionZChange}
         onColorChange={handleColorChange}
       />
+      {/* <button onClick={handleSaveAsPNG}>Save Canvas as PNG</button> */}
+      
       <div
+      ref={canvasRef}
+        id='print'
         style={{
           position: 'relative',
           width: '800px',
