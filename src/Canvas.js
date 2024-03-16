@@ -18,8 +18,30 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   const [positionY, setPositionY] = useState(0);
   const [positionZ, setPositionZ] = useState(0);
   const [color, setColor] = useState('#000000');
+  const [itemText, setItemText] = useState(''); // State for item text
+  const [itemImage, setItemImage] = useState(''); // State for item image
+
+  // Update item text
+  const handleItemTextChange = (text) => {
+    setItemText(text);
+    //setColor(newValue);
+    if (selectedItem) {
+      selectedItem.text = text;
+      onUpdateItems([...items]); // Update items with modified color
+    }
+  };
+
+  // Update item image
+  const handleItemImageChange = (image) => {
+    setItemImage(image);
+    if (selectedItem) {
+      selectedItem.image = image;
+      onUpdateItems([...items]); // Update items with modified color
+    }
+  };
 
   useEffect(() => {
+    
     onUpdateItems(items); // Update right panel when items change
   }, [items, onUpdateItems]);
 
@@ -50,7 +72,26 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
       setDraggedItem(null);
     } else {
       const itemName = e.dataTransfer.getData('text/plain');
-      onDrop({ name: itemName, x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+      let itemPrice = 0; // Default price
+
+    // Set price based on the dropped item's name
+    switch (itemName) {
+      case 'Chair':
+        itemPrice = 100; // Example price for Chair
+        break;
+      case 'Table':
+        itemPrice = 200; // Example price for Table
+        break;
+      case 'Text':
+        itemPrice = 0; // Example price for Text
+        break;
+      default:
+        itemPrice = 0; // Default price if item name is not recognized
+        break;
+    }
+
+    onDrop({ name: itemName, price: itemPrice, text: itemText, image: itemImage, x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+
     }
   };
 
@@ -127,31 +168,13 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   
   const handleMouseUp = (e, item) => {
     console.log("Mouse Up", item);
-    //console.log("Mouse up");
-    //setDraggedItem(null);
   };
   
-  // const handleSaveAsPNG = async () => {
-  //   try {
-  //     const dataUrl = await toPng(canvasRef.current);
-  //     const link = document.createElement('a');
-  //     link.href = dataUrl;
-  //     link.download = 'asdascanvas_preview.png';
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     document.body.removeChild(link);
-  //   } catch (error) {
-  //     console.error('Error saving canvas as PNG:', error);
-  //   }
-  // };
+ 
   const pngExportRef = () => {
     return canvasRef;
   }
-  // const [canvasWidth, setcanvasWidth] = useState(null);
-  
-  // useEffect((canvasRef) => {
-  //   console.log(canvasRef.current.clientWidth);
-  // },[canvasRef]);
+ 
 
   return (
     <section id='Canvas' className='flex-grow-1 Canvas'>
@@ -165,6 +188,10 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
         onPositionYChange={handlePositionYChange}
         onPositionZChange={handlePositionZChange}
         onColorChange={handleColorChange}
+        itemText={itemText}
+        itemImage={itemImage}
+        onItemTextChange={handleItemTextChange}
+        onItemImageChange={handleItemImageChange}
       />
       {/* <button onClick={handleSaveAsPNG}>Save Canvas as PNG</button> */}
       <section className='px-5 py-5'>
@@ -219,8 +246,8 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
                 
               )
               : item.name === 'Text' ? (
-                <h6>Text</h6>
-                
+                <h6>{item.text}</h6>
+                // <pre>{JSON.stringify(item, null, 2)}</pre>
               ) : (
                 <h6>{item.name}</h6>
               )}

@@ -13,8 +13,8 @@ import jsPDF from 'jspdf';
 
 const App = () => {
   const [items, setItems] = useState([
-    { id: 1, name: 'Chair', x: 50, y: 50 },
-    { id: 2, name: 'Table', x: 150, y: 150 }
+    { id: 1, name: 'Chair',price:10, x: 50, y: 50 },
+    { id: 2, name: 'Table',price:50, x: 150, y: 150 }
   ]);
   
   // Counter for generating unique IDs

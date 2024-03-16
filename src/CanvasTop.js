@@ -4,9 +4,9 @@ import Layers from './Layers';
 const CanvasTop = ({items}) => {
 // State for managing layers visibility
 const [showLayers, setShowLayers] = useState(false);
-  const toggleLayers = ({showLayers}) => {
-    setShowLayers(!showLayers);
-  };
+const toggleLayers = () => {
+  setShowLayers(prevState => !prevState); // Toggle the state of showLayers
+};
     return(
         <section id='canvasTop' className="css-1g2lq23 flex-grow-1 canvasTop">
             <div className="css-4ns52">
@@ -16,11 +16,11 @@ const [showLayers, setShowLayers] = useState(false);
                     <div className="css-1c0qma8"></div>
                     <div className="css-s7vhwb"><span className="css-1n30axn">Resize</span></div>
                     <div className="css-1c0qma8"></div>
-                    <div className="css-s7vhwb"><span className="css-1n30axn">Layers</span></div>
+                    <div className="css-s7vhwb" onClick={toggleLayers}><span className="css-1n30axn">Layers</span></div>
                 </div>
                 </div>
-                <button onClick={toggleLayers}>Toggle Layers</button>
-                {showLayers && <Layers items={items} />}
+                {/* <button onClick={toggleLayers}>Toggle Layers</button> */}
+                {showLayers  && <Layers toggleLayersClick={toggleLayers} items={items} />}
             </div>
             
             </section>
