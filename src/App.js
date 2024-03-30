@@ -4,7 +4,7 @@ import Canvas from './Canvas';
 import RightPanel from './RightPanel';
 import MainTop from './mainTop';
 import CanvasTop from './CanvasTop';
-import Layers from './Layers';
+//import Layers from './Layers';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { toPng } from 'html-to-image';
@@ -13,28 +13,125 @@ import jsPDF from 'jspdf';
 
 const App = () => {
   const [items, setItems] = useState([
+    {
+      canvasSettings:{
+        'canvasBG':'#fff',
+        'canvasWidth':'800px',
+        'canvasHeight':'600px',
+      },
+      droppedItems:[
     { id: 1, name: 'Chair',price:10, x: 50, y: 50 },
     { id: 2, name: 'Table',price:50, x: 150, y: 150 }
+    ]
+  }
   ]);
   
-  // Counter for generating unique IDs
-  const [idCounter, setIdCounter] = useState(3); // Start from 3 if you already have items with IDs 1 and 2
+  
+  const [idCounter, setIdCounter] = useState(3); 
 
   const handleDragStart = (e, item) => {
     console.log(item.name);
     e.dataTransfer.setData('text', item.name);
   };
 
+  const handleDropNNN = (newItem) => {
+    
+    newItem.id = idCounter;
+    setIdCounter(idCounter + 1);
+
+    
+    setItems((prevItems) => [
+      {
+        ...prevItems[0].droppedItems, 
+        droppedItems: [...prevItems[0].droppedItems, newItem], 
+      },
+    ]);
+
+    console.log(newItem);
+  };
+
   const handleDrop = (newItem) => {
-    // Assign a unique ID to the dropped item
+    
     newItem.id = idCounter;
     setIdCounter(idCounter + 1); 
 
-    setItems([...items, newItem]);
+    //setItems([...items, newItem]);
+
+setItems(
+  [
+    {
+      ...items[0],
+      droppedItems:[...items[0].droppedItems,newItem
+    ]
+  }
+  ]
+
+);
+
+    // setItems([
+    //   {
+    //     canvasSettings: {
+    //       ...items[0].canvasSettings,
+    //       droppedItems: [...items[0].droppedItems, newItem],
+    //     },
+    //   },
+    // ]);
+
+    console.log(newItem);
+    console.log(items);
+
+  };
+
+  const updateSettingFunc = (setting) => {
+    //console.log(setting);
+    
+    setItems([
+      {
+        ...items[0], 
+        canvasSettings: {
+          ...items[0].canvasSettings, 
+          ...setting, 
+        },
+        droppedItems: items[0].droppedItems, 
+      },
+    ]);
   };
 
   const handleRemoveItem = (itemId) => {
-    setItems(items.filter(item => item.id !== itemId));
+    console.log(itemId);
+
+     const updatedDroppedItems = items[0].droppedItems.filter(item => item.id !== itemId);
+  
+
+    console.log(updatedDroppedItems);
+
+    setItems(
+      [
+        {
+          ...items[0],
+          droppedItems:updatedDroppedItems
+      }
+      ]
+    
+    );
+
+
+  };
+
+  const handleRemoveItemOLD = (itemId) => {
+    console.log(itemId);
+    //setItems(items.filter(item => item.id !== itemId));
+    // setItems(
+    //   [
+    //     {
+    //       ...items[0],
+    //       droppedItems:[...items[0].droppedItems,newItem
+    //     ]
+    //   }
+    //   ]
+    
+    // );
+  
   };
 
   // Function to update items
@@ -168,7 +265,7 @@ const App = () => {
       <div className='d-flex flex-column flex-grow-1'>
         {/* Pass updateItems function to Canvas */}
         <CanvasTop items={items}></CanvasTop>
-        <Canvas items={items} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} canvasRef={canvasRef} />
+        <Canvas items={items} updateSetting={updateSettingFunc} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} canvasRef={canvasRef} />
       </div>
       
       {/* <RightPanel items={items} onExport={handleExport} onImport={handleImport} /> */}

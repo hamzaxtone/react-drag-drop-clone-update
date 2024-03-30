@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import TopPanel from './TopPanel';
+import DrawingCanvas from './DrawingCanvas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChair, faRemove, faTable } from '@fortawesome/free-solid-svg-icons';
+import { faChair, faRemove, faTable, faCog, faPencil } from '@fortawesome/free-solid-svg-icons';
+//import { zIndex } from 'html2canvas/dist/types/css/property-descriptors/z-index';
 // import { toPng } from 'html-to-image';
 
-const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
+const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   //const canvasRef = useRef(null);
   const [context, setContext] = useState(null);
   // useEffect(() => {
@@ -18,31 +20,39 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   const [positionY, setPositionY] = useState(0);
   const [positionZ, setPositionZ] = useState(0);
   const [color, setColor] = useState('#000000');
-  const [itemText, setItemText] = useState(''); // State for item text
-  const [itemImage, setItemImage] = useState(''); // State for item image
+  const [itemText, setItemText] = useState('Default Text'); 
+  const [itemImage, setItemImage] = useState(''); 
 
-  // Update item text
+  const [canvasWidth, setcanvasWidth] = useState();
+  const [canvasHeight, setcanvasHeight] = useState();
+  const [canvasBG, setcanvasBG] = useState();
+  const [canvasBGImage, setcanvasBGImage] = useState();
+
+  const [showSetting, setshowSetting] = useState(false);
+  const [drawSetting, setdrawSetting] = useState(false);
+
+  
   const handleItemTextChange = (text) => {
     setItemText(text);
     //setColor(newValue);
     if (selectedItem) {
       selectedItem.text = text;
-      onUpdateItems([...items]); // Update items with modified color
+      onUpdateItems([...items]); 
     }
   };
 
-  // Update item image
+ 
   const handleItemImageChange = (image) => {
     setItemImage(image);
     if (selectedItem) {
       selectedItem.image = image;
-      onUpdateItems([...items]); // Update items with modified color
+      onUpdateItems([...items]); 
     }
   };
 
   useEffect(() => {
     
-    onUpdateItems(items); // Update right panel when items change
+    onUpdateItems(items); 
   }, [items, onUpdateItems]);
 
   const handleDragStart = (e, item) => {
@@ -63,30 +73,31 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
 
-      // Find the dragged item in the items array
+      
       const updatedItems = items.map((item) =>
         item === draggedItem ? { ...item, x, y } : item
       );
 
-      onUpdateItems(updatedItems); // Update items with the modified coordinates
+      onUpdateItems(updatedItems); 
       setDraggedItem(null);
     } else {
       const itemName = e.dataTransfer.getData('text/plain');
-      let itemPrice = 0; // Default price
+      let itemPrice = 0; 
 
-    // Set price based on the dropped item's name
+    
     switch (itemName) {
       case 'Chair':
-        itemPrice = 100; // Example price for Chair
+        itemPrice = 100; 
         break;
       case 'Table':
-        itemPrice = 200; // Example price for Table
+        itemPrice = 200; 
         break;
       case 'Text':
-        itemPrice = 0; // Example price for Text
+        itemPrice = 0;
+        //setItemText("default text");
         break;
       default:
-        itemPrice = 0; // Default price if item name is not recognized
+        itemPrice = 0; 
         break;
     }
 
@@ -137,6 +148,7 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
 
   const handleRemoveItemClick = (itemId) => {
     console.log('handleRemoveItemClick');
+
     onRemoveItem(itemId);
     setSelectedItem(null);
   };
@@ -165,6 +177,33 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
       onUpdateItems(updatedItems);
     }
   };
+
+  const updateCanvasWidth = (e) => {
+    //console.log(e.target.value);
+    //setItems('');
+    var CanvasWidth = 1920;
+    if( e.target.value > 1920 ){
+
+    }else{
+      CanvasWidth = e.target.value;
+    }
+    updateSetting({'canvasWidth':CanvasWidth+ 'px'});
+  }
+  const updateCanvasHeight = (e) => {
+    //console.log(e.target.value);
+    //setItems('');
+    var CanvasHeight = 800;
+    if( e.target.value > 800 ){
+
+    }else{
+      CanvasHeight = e.target.value;
+    }
+    updateSetting({'canvasHeight':CanvasHeight+ 'px'});
+  }
+
+  const updateCanvasBG = (e) => {
+    updateSetting({'canvasBG':e.target.value});
+  }
   
   const handleMouseUp = (e, item) => {
     console.log("Mouse Up", item);
@@ -174,11 +213,84 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
   const pngExportRef = () => {
     return canvasRef;
   }
+
+  const toggleSetting = () => {
+  setshowSetting(prevState => !prevState); // Toggle the state of showLayers
+};
  
+const toggleDraw = () => {
+  setdrawSetting(prevState => !prevState);
+  setshowSetting(false);
+}
+
+const handleImageUpload = (e) => {
+  const file = e.target.files[0]; // Get the uploaded file
+  const reader = new FileReader();
+
+  reader.onload = (event) => {
+    const base64String = event.target.result; 
+    console.log('Base64 Image:', base64String);
+
+    setcanvasBGImage(base64String);
+    updateSetting({'canvasBGImage':base64String});
+  };
+
+  if (file) {
+    reader.readAsDataURL(file); // Read the file as a data URL (base64)
+  }
+};
+const removeSelection = () =>{
+  //setSelectedItem(null);
+}
+
+
+
+const [resizing, setResizing] = useState(false);
+const [resizeStartX, setResizeStartX] = useState(0);
+const [resizeStartY, setResizeStartY] = useState(0);
+const [resizeStartWidth, setResizeStartWidth] = useState(0);
+const [resizeStartHeight, setResizeStartHeight] = useState(0);
+
+const handleMouseDownResize = (e, item) => {
+  setSelectedItem(item);
+  setResizing(false); // Reset resizing state when dragging
+  // Other mouse down logic as needed
+};
+
+const handleResizeStart = (e, item) => {
+  e.preventDefault();
+  setResizing(true);
+  setResizeStartX(e.clientX);
+  setResizeStartY(e.clientY);
+  setResizeStartWidth(item.width);
+  setResizeStartHeight(item.height);
+};
+
+const handleMouseMoveResize = (e) => {
+  if (resizing && selectedItem) {
+    const dx = e.clientX - resizeStartX;
+    const dy = e.clientY - resizeStartY;
+    const newWidth = resizeStartWidth + dx;
+    const newHeight = resizeStartHeight + dy;
+    
+    // Update item dimensions
+    const updatedItems = items.map((item) =>
+      item === selectedItem ? { ...item, width: newWidth, height: newHeight } : item
+    );
+    onUpdateItems(updatedItems);
+  }
+};
+
+const handleMouseUpResize = () => {
+  setResizing(false);
+};
+ 
+
 
   return (
     <section id='Canvas' className='flex-grow-1 Canvas'>
       <div className='px-0'>
+        {selectedItem && 
       <TopPanel
         positionX={positionX}
         positionY={positionY}
@@ -193,25 +305,122 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
         onItemTextChange={handleItemTextChange}
         onItemImageChange={handleItemImageChange}
       />
+    }
       {/* <button onClick={handleSaveAsPNG}>Save Canvas as PNG</button> */}
       <section className='px-5 py-5'>
+      <div className='d-flex flex-wrap position-relative'>
+         
+        {showSetting && 
+         <table style={{
+          left:'50px',
+          position:'relative'
+
+         }} className='ms-5 ps-5 mb-1 w-50 table table-bordered'>
+          <tbody>
+            <tr>
+              <td>
+              <div className="input-group input-group-sm">
+                <span className="input-group-text" >Width:</span>
+                <input
+                  className="form-control"
+                  id="canvasWidth"
+                  type="number"
+                  min="500"
+                  max="1920"
+                  value={parseInt(items[0].canvasSettings.canvasWidth)}
+                  onChange={updateCanvasWidth}
+                />
+              </div>
+                
+              </td>
+              <td>
+
+              <div className="input-group input-group-sm">
+                <span className="input-group-text" >Height:</span>
+                <input
+                className="form-control"
+                  id="canvasHeight"
+                  type="number"
+                  min="500"
+                  max="800"
+                  value={parseInt(items[0].canvasSettings.canvasHeight)}
+                  onChange={updateCanvasHeight}
+                  onKeyUp={updateCanvasHeight}
+                />
+                </div>
+              </td>
+              
+            </tr>
+            <tr>
+            <td>
+              <div className="input-group input-group-sm">
+                <span className="input-group-text" >BG Color:</span>
+                <input
+                className="form-control"
+                  id="canvasBG"
+                  type="color"
+                  value={items[0].canvasSettings.canvasBG}
+                  onChange={updateCanvasBG}
+                />
+                </div>
+              </td>
+              <td>
+              <div className="input-group input-group-sm">
+                <span className="input-group-text" >BG Image:</span>
+                <input
+                className="form-control" 
+                type="file" accept="*" onChange={handleImageUpload} />
+                </div>
+                </td>
+            </tr>
+            
+            </tbody>
+            </table>
+            }
+            <FontAwesomeIcon
+                style={{
+                  position: 'absolute',
+                  left: '0%',
+                  cursor:"pointer",
+                  bottom: '5px',
+                }}
+                color='black' onClick={toggleSetting} title='Setting' size='2x' icon={faCog}
+              /> 
+              <FontAwesomeIcon
+                style={{
+                  position: 'absolute',
+                  left: '50px',
+                  cursor:"pointer",
+                  bottom: '5px',
+                  
+                }}
+                color={drawSetting ? 'Green':'Black'}  onClick={toggleDraw} title='Setting' size='2x' icon={faPencil}
+              /> 
+            </div>  
       <div
       ref={canvasRef}
         id='print'
-        className='mw-100'
+        className='-mw-100'
         style={{
           position: 'relative',
-          width: '100%',
-          background:'#ffffff',
-          height: '600px',
+          width: items[0].canvasSettings.canvasWidth,
+          backgroundColor: items[0].canvasSettings.canvasBG,
+          backgroundRepeat:'no-repeat',
+          backgroundSize:'cover',
+          backgroundImage:`url(${canvasBGImage})`,
+          height: items[0].canvasSettings.canvasHeight,
           border: '1px solid black',
-          cursor: 'pointer',
+          cursor: 'pointer'
+          
         }}
+        
         onDragOver={handleDragOver}
         onDrop={handleDrop}
         onMouseMove={handleMouseMove}
+        onMouseOut={removeSelection}
       >
-        {items.map((item, index) => (
+          {/* <pre>{JSON.stringify(items, null, 2)}</pre>  */}
+        {items[0].droppedItems.map((item, index) => (
           <div
             key={index}
             
@@ -224,12 +433,37 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
               width: 'auto',
               height: 'auto',
               padding: '10px',
+              
               zIndex: selectedItem === item ? 1 : 0,
               outline: selectedItem === item ? '2px solid blue' : 'none',
               outlineOffset: selectedItem === item ? '-3px' : '0px',
+              resize: resizing ? 'none' : 'both'
             }}
+            onMouseDown={(e) => handleMouseDownResize(e, item)}
           >
+
+            
+    {/* <div
+      className='resize-handle'
+      style={{
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        cursor: 'se-resize', // Cursor style for resizing
+        width: '10px',
+        height: '10px',
+        background: 'rgba(0, 0, 0, 0.5)',
+      }}
+      onMouseDown={(e) => handleResizeStart(e, item)} // Start resizing on mouse down
+    >
+      resize
+    </div> */}
+
             <div className='draggableItem'
+            style={{
+              transform: `rotate(${item.z}deg)`,
+
+            }}
               draggable
               onMouseUp={(e) => handleMouseUp(e, item)}
               onMouseDown={(e) => handleMouseDown(e, item)}
@@ -245,6 +479,11 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
                 <img src='https://images.unsplash.com/photo-1709136494561-d98ea74c9431?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200' />
                 
               )
+              : item.name === 'Draw' ? (
+                <DrawingCanvas></DrawingCanvas>
+                
+              )
+              
               : item.name === 'Text' ? (
                 <h6>{item.text}</h6>
                 // <pre>{JSON.stringify(item, null, 2)}</pre>
@@ -263,8 +502,18 @@ const Canvas = ({ items, onDrop, onRemoveItem, onUpdateItems ,canvasRef  }) => {
               />
             )}
           </div>
-        ))}
+        ))} 
+        <div
+        style={{
+          zIndex: drawSetting ? '999' : '-1',
+          position:'relative'
+        }}
+         >
+        {/* style={{ zIndex: drawSetting ? 999 : 0 }} */}
+          <DrawingCanvas enable={drawSetting} Cwidth={items[0].canvasSettings.canvasWidth} Cheight={items[0].canvasSettings.canvasHeight}></DrawingCanvas>
+        </div>
       </div>
+      
       </section>
       </div>
     </section>

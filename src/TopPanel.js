@@ -32,10 +32,22 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
           <tbody>
             <tr>
               <td>
-                <label htmlFor="positionX">Position X:</label>
+                <div className="input-group input-group-sm">
+                <span className="input-group-text" >Position X:</span>
+                <input
+                className="form-range"
+                id="positionX"
+                  type="range"
+                  min="0"
+                  max="800"
+                  value={positionX}
+                  onChange={handlePositionXChange}
+                />
+                </div>
               </td>
               <td>
                 <input
+                className="form-range"
                   id="positionX"
                   type="range"
                   min="0"
@@ -71,7 +83,7 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
                   id="positionZ"
                   type="range"
                   min="0"
-                  max="100"
+                  max="360"
                   value={positionZ}
                   onChange={handlePositionZChange}
                 />

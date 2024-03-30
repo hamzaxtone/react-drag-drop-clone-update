@@ -41,7 +41,8 @@ const MainTop = ({ items, onExport, onImport, onSaveAsPNG,onSaveAsPDF  }) => {
          </span>
       </a>
       <div className="css-1xzdikv">
-        <input  onChange={handleFileChange} accept="application/json" type="file" className="css-1hyfx7x" />Import</div>
+      
+      <label><input  onChange={handleFileChange} accept="application/json" type="file" className="css-1hyfx7x" />Import</label></div>
       <div className="css-1xzdikv" onClick={exportTemplate}>Export</div>
       <div onClick={onSaveAsPNG} className="css-y73845 mr-3">
          <div className="css-8cka6y">

@@ -18,7 +18,14 @@ const Layers = ({ items, toggleLayersClick }) => {
               </div>
             </div>
             <ul className="layers-list p-0">
-              {items.map((item, index) => (
+            {/* <pre>{JSON.stringify(items, null, 2)}</pre> */}
+            {/* {items[0].canvasSettings.map((item, index) => (
+               
+            ))} */}
+            {/* <pre>{JSON.stringify(items, null, 2)}</pre>  */}
+
+              {items[0].droppedItems.map((item, index) => (
+
                 <li key={index} role="button" tabIndex="0" aria-disabled="false" aria-roledescription="sortable" aria-describedby="DndDescribedBy-3" className="css-y42dwd">
                   <div className="css-70qvj9">
                     <div className="css-jt95m4">

@@ -12,9 +12,9 @@ const toggleLayers = () => {
             <div className="css-4ns52">
                 <div className="css-19fugzd">
                 <div className="css-18cvmjs">
-                    <div className="css-s7vhwb"><span className="css-1n30axn">Position</span></div>
-                    <div className="css-1c0qma8"></div>
-                    <div className="css-s7vhwb"><span className="css-1n30axn">Resize</span></div>
+                    {/* <div className="css-s7vhwb"><span className="css-1n30axn">Position</span></div>
+                    <div className="css-1c0qma8"></div> 
+                    <div className="css-s7vhwb" ><span className="css-1n30axn">Setting</span></div>*/}
                     <div className="css-1c0qma8"></div>
                     <div className="css-s7vhwb" onClick={toggleLayers}><span className="css-1n30axn">Layers</span></div>
                 </div>
