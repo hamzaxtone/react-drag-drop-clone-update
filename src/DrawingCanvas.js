@@ -1,53 +1,51 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
-const DrawingCanvas = ({enable,Cwidth,Cheight}) => {
+const DrawingCanvas = ({ canvasdrawSetting,enable, Cwidth, Cheight, selectedItem }) => {
   const canvasRef = useRef(null);
-  let isDrawing = false;
+  const [isDrawing, setIsDrawing] = useState(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    //console.log(canvasdrawSetting);
+    ctx.strokeStyle = canvasdrawSetting.color;
+    ctx.lineWidth = canvasdrawSetting.width;
+  }, [canvasdrawSetting]);
 
   const startDrawing = (e) => {
-    isDrawing = true;
+    setIsDrawing(true);
     const ctx = canvasRef.current.getContext('2d');
-    console.log(enable);
-    if( !enable ){
-        isDrawing = false;
-    }
-    
+    const rect = canvasRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
     ctx.beginPath();
-    // Use offsetX and offsetY to get the mouse position relative to the canvas
-    ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-    console.log('startDrawing');
+    ctx.moveTo(offsetX, offsetY);
   };
 
   const draw = (e) => {
     if (!isDrawing) return;
     const ctx = canvasRef.current.getContext('2d');
-    ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    const rect = canvasRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+    ctx.lineTo(offsetX, offsetY);
     ctx.stroke();
-    console.log('draw');
   };
 
   const stopDrawing = () => {
-    isDrawing = false;
-    console.log('stopDrawing');
+    setIsDrawing(false);
   };
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    ctx.strokeStyle = 'black';
-    ctx.lineWidth = 2;
-  }, []);
 
   return (
     <canvas
       ref={canvasRef}
       width={Cwidth}
       height={Cheight}
-      style={{ border: '1px solid black' }}
-      onMouseDown={startDrawing}
-      onMouseMove={draw}
-      onMouseUp={stopDrawing}
-      onMouseOut={stopDrawing}
+      //style={{ border: '1px solid black' }}
+      onMouseDown={enable ? startDrawing : null}
+      onMouseMove={enable ? draw : null}
+      onMouseUp={enable ? stopDrawing : null}
+      onMouseOut={enable ? stopDrawing : null}
     ></canvas>
   );
 };

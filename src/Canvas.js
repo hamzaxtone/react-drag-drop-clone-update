@@ -30,6 +30,7 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
 
   const [showSetting, setshowSetting] = useState(false);
   const [drawSetting, setdrawSetting] = useState(false);
+  const [canvasdrawSetting, setcanvasdrawSetting] = useState([{color:'#000',width:'2'}]);
 
   
   const handleItemTextChange = (text) => {
@@ -41,8 +42,11 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
     }
   };
 
+  
  
   const handleItemImageChange = (image) => {
+    //console.log(image);
+    
     setItemImage(image);
     if (selectedItem) {
       selectedItem.image = image;
@@ -68,6 +72,8 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
   const handleDrop = (e) => {
     e.preventDefault();
 
+    setItemImage('');
+    
     if (draggedItem) {
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -100,7 +106,7 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
         itemPrice = 0; 
         break;
     }
-
+    
     onDrop({ name: itemName, price: itemPrice, text: itemText, image: itemImage, x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
 
     }
@@ -216,12 +222,39 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
 
   const toggleSetting = () => {
   setshowSetting(prevState => !prevState); // Toggle the state of showLayers
+  setdrawSetting(false);
 };
- 
+
+
+
+const drawColor = (e) => {
+  setcanvasdrawSetting(prevState => ({
+    ...prevState,
+    color: e.target.value
+  }));
+  console.log(canvasdrawSetting);
+};
+const drawStrokeWidth = (e) => {
+  setcanvasdrawSetting(prevState => ({
+    ...prevState,
+    width: e.target.value
+  }));
+  //console.log(e.target.value);
+  console.log(canvasdrawSetting);
+  //console.log(canvasdrawSetting[0].color);
+};
+const drawStrokeWidthss = (e) => {
+  //const [canvasdrawSetting, setcanvasdrawSetting] = useState([{color:'#000',width:'2'}]);
+  //setcanvasdrawSetting([{color:...canvasdrawSetting[0].color,width:e.target.value}]);
+  console.log(canvasdrawSetting[0].width);
+  console.log(canvasdrawSetting[0].color);
+};
 const toggleDraw = () => {
-  setdrawSetting(prevState => !prevState);
+  //setdrawSetting(prevState => !prevState);
+  setSelectedItem(null);
+  setdrawSetting((prev) => !prev);
   setshowSetting(false);
-}
+};
 
 const handleImageUpload = (e) => {
   const file = e.target.files[0]; // Get the uploaded file
@@ -292,6 +325,7 @@ const handleMouseUpResize = () => {
       <div className='px-0'>
         {selectedItem && 
       <TopPanel
+        item={selectedItem}
         positionX={positionX}
         positionY={positionY}
         positionZ={positionZ}
@@ -385,17 +419,30 @@ const handleMouseUpResize = () => {
                   bottom: '5px',
                 }}
                 color='black' onClick={toggleSetting} title='Setting' size='2x' icon={faCog}
-              /> 
+              />
+              <div className='drawSetting'
+              style={{
+                position: 'absolute',
+                left: '50px',
+                bottom: '5px'
+              }}
+              > 
               <FontAwesomeIcon
                 style={{
-                  position: 'absolute',
-                  left: '50px',
+                  
                   cursor:"pointer",
-                  bottom: '5px',
+                  
                   
                 }}
-                color={drawSetting ? 'Green':'Black'}  onClick={toggleDraw} title='Setting' size='2x' icon={faPencil}
-              /> 
+                color={drawSetting ? 'Green':'Black'}  onClick={toggleDraw} title='Draw' size='2x' icon={faPencil}
+              />
+              {drawSetting && 
+              <>
+              <input title='draw color' className='ms-3 me-3' type='color' onChange={drawColor} />
+              <input min={2} max={50} title='draw width' type='range' onChange={drawStrokeWidth} />
+              </>
+              }
+              </div> 
             </div>  
       <div
       ref={canvasRef}
@@ -420,6 +467,12 @@ const handleMouseUpResize = () => {
         onMouseOut={removeSelection}
       >
           {/* <pre>{JSON.stringify(items, null, 2)}</pre>  */}
+          <div className='Items' 
+          style={{
+            zIndex: drawSetting ? 0 : 1,
+            position:'relative'
+          }}
+          >
         {items[0].droppedItems.map((item, index) => (
           <div
             key={index}
@@ -434,7 +487,7 @@ const handleMouseUpResize = () => {
               height: 'auto',
               padding: '10px',
               
-              zIndex: selectedItem === item ? 1 : 0,
+              //zIndex: selectedItem === item ? 1 : 0,
               outline: selectedItem === item ? '2px solid blue' : 'none',
               outlineOffset: selectedItem === item ? '-3px' : '0px',
               resize: resizing ? 'none' : 'both'
@@ -476,7 +529,9 @@ const handleMouseUpResize = () => {
                 <FontAwesomeIcon title={item.name} color={item.color} size='6x' icon={faTable} />
               )
               : item.name === 'Image' ? (
-                <img src='https://images.unsplash.com/photo-1709136494561-d98ea74c9431?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200' />
+                <img 
+                src={ item.image != "" ? item.image :'https://images.unsplash.com/photo-1709136494561-d98ea74c9431?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200' } 
+                 />
                 
               )
               : item.name === 'Draw' ? (
@@ -503,14 +558,21 @@ const handleMouseUpResize = () => {
             )}
           </div>
         ))} 
+        </div>
         <div
         style={{
-          zIndex: drawSetting ? '999' : '-1',
+          //zIndex: drawSetting ? '999' : '-1',
           position:'relative'
         }}
          >
         {/* style={{ zIndex: drawSetting ? 999 : 0 }} */}
-          <DrawingCanvas enable={drawSetting} Cwidth={items[0].canvasSettings.canvasWidth} Cheight={items[0].canvasSettings.canvasHeight}></DrawingCanvas>
+        <DrawingCanvas
+        canvasdrawSetting={canvasdrawSetting} 
+  enable={drawSetting} 
+  Cwidth={items[0].canvasSettings.canvasWidth} 
+  Cheight={items[0].canvasSettings.canvasHeight} 
+  selectedItem={selectedItem} // Pass selectedItem prop
+/>
         </div>
       </div>
       

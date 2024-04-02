@@ -2,7 +2,7 @@ import React from 'react';
 
 const Layers = ({ items, toggleLayersClick }) => {
   // Calculate total budget based on item prices
-  const totalBudget = items.reduce((acc, item) => acc + (item.price || 0), 0);
+  const totalBudget = items[0].droppedItems.reduce((acc, item) => acc + (item.price || 0), 0);
 
   return (
     <>
@@ -38,14 +38,14 @@ const Layers = ({ items, toggleLayersClick }) => {
                       {item.price > 0 &&
                         <span className="ms-2 badge rounded-pill bg-success">{item.price} Rs</span>
                       }
-                      <pre>{JSON.stringify(item, null, 2)}</pre>
+                      {/* <pre>{JSON.stringify(item, null, 2)}</pre> */}
                     </div>
                   </div>
-                  <div className="css-hcvu4z">
+                  {/* <div className="css-hcvu4z">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1em" height="1em">
                       <path d="M144 128a16 16 0 1 1-16-16 16 16 0 0 1 16 16Zm-84-16a16 16 0 1 0 16 16 16 16 0 0 0-16-16Zm136 0a16 16 0 1 0 16 16 16 16 0 0 0-16-16Z"></path>
                     </svg>
-                  </div>
+                  </div> */}
                 </li>
               ))}
             </ul>

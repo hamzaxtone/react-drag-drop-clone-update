@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect} from 'react';
 
-const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage, onPositionXChange, onPositionYChange, onPositionZChange, onColorChange, onItemTextChange, onItemImageChange }) => {
+const TopPanel = ({ item,positionX, positionY, positionZ, color, itemText, itemImage, onPositionXChange, onPositionYChange, onPositionZChange, onColorChange, onItemTextChange, onItemImageChange }) => {
+  useEffect(() => {
+    console.log('console.log(item);');
+    console.log(item.name);
+  }, [item]);
+  
   const handlePositionXChange = (e) => {
     onPositionXChange(parseInt(e.target.value));
   };
@@ -22,6 +27,23 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
   };
 
   const handleItemImageChange = (e) => {
+    //console.log(e);
+    const file = e.target.files[0]; // Get the uploaded file
+    const reader = new FileReader();
+  
+    reader.onload = (event) => {
+      const base64String = event.target.result; 
+      console.log('Base64 Image:', base64String);
+  
+      onItemImageChange(base64String);
+    };
+  
+    if (file) {
+      reader.readAsDataURL(file); // Read the file as a data URL (base64)
+    }
+  };
+
+  const handleItemImageChangeOLD = (e) => {
     onItemImageChange(e.target.value);
   };
 
@@ -34,7 +56,7 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
               <td>
                 <div className="input-group input-group-sm">
                 <span className="input-group-text" >Position X:</span>
-                <input
+                {/* <input
                 className="form-range"
                 id="positionX"
                   type="range"
@@ -42,12 +64,12 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
                   max="800"
                   value={positionX}
                   onChange={handlePositionXChange}
-                />
+                /> */}
                 </div>
               </td>
               <td>
                 <input
-                className="form-range"
+                  className="form-range"
                   id="positionX"
                   type="range"
                   min="0"
@@ -64,6 +86,7 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
               </td>
               <td>
                 <input
+                  className="form-range"
                   id="positionY"
                   type="range"
                   min="0"
@@ -80,6 +103,7 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
               </td>
               <td>
                 <input
+                  className="form-range"
                   id="positionZ"
                   type="range"
                   min="0"
@@ -90,12 +114,14 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
               </td>
               <td>{positionZ}</td>
             </tr>
+            {item.name != 'Image' && 
             <tr>
               <td>
                 <label htmlFor="color">Color:</label>
               </td>
               <td >
                 <input
+                  className="form-color"
                   id="color"
                   type="color"
                   value={color}
@@ -104,12 +130,15 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
               </td>
               <td>{color}</td>
             </tr>
+            }
+            {item.name == 'Text' && 
             <tr>
               <td>
                 <label htmlFor="itemText">Item Text:</label>
               </td>
-              <td>
-                <input
+              <td> 
+                <input 
+                  className="form-control"
                   id="itemText"
                   type="text"
                   value={itemText}
@@ -118,6 +147,8 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
               </td>
               <td>{itemText}</td>
             </tr>
+            }
+            {item.name == 'Image' && 
             <tr>
               <td>
                 <label htmlFor="itemImage">Item Image:</label>
@@ -125,13 +156,16 @@ const TopPanel = ({ positionX, positionY, positionZ, color, itemText, itemImage,
               <td>
                 <input
                   id="itemImage"
-                  type="text"
-                  value={itemImage}
+                  type="file"
+                  //ref={(input) => { this.fileInput = input; }}
+                  accept="image/*"
+                  //value={itemImage}
                   onChange={handleItemImageChange}
                 />
               </td>
-              <td>{itemImage}</td>
+              <td></td>
             </tr>
+            }
           </tbody>
         </table>
       </div>
