@@ -323,6 +323,7 @@ const handleMouseUpResize = () => {
   return (
     <section id='Canvas' className='flex-grow-1 Canvas'>
       <div className='px-0'>
+         asdas
         {selectedItem && 
       <TopPanel
         pageSettings={items[0].canvasSettings}
