@@ -73,7 +73,7 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
     e.preventDefault();
 
     setItemImage('');
-    
+
     if (draggedItem) {
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left;
@@ -325,6 +325,7 @@ const handleMouseUpResize = () => {
       <div className='px-0'>
         {selectedItem && 
       <TopPanel
+        pageSettings={items[0].canvasSettings}
         item={selectedItem}
         positionX={positionX}
         positionY={positionY}

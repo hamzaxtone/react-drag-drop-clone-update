@@ -1,10 +1,14 @@
 import React, { useEffect} from 'react';
 
-const TopPanel = ({ item,positionX, positionY, positionZ, color, itemText, itemImage, onPositionXChange, onPositionYChange, onPositionZChange, onColorChange, onItemTextChange, onItemImageChange }) => {
+const TopPanel = ({ pageSettings,item,positionX, positionY, positionZ, color, itemText, itemImage, onPositionXChange, onPositionYChange, onPositionZChange, onColorChange, onItemTextChange, onItemImageChange }) => {
   useEffect(() => {
-    console.log('console.log(item);');
-    console.log(item.name);
+    //console.log('console.log(item);');
+    //console.log(item.name);
   }, [item]);
+  useEffect(() => {
+    //console.log('console.log(item);');
+    //console.log(item.name);
+  }, [pageSettings]);
   
   const handlePositionXChange = (e) => {
     onPositionXChange(parseInt(e.target.value));
@@ -73,7 +77,7 @@ const TopPanel = ({ item,positionX, positionY, positionZ, color, itemText, itemI
                   id="positionX"
                   type="range"
                   min="0"
-                  max="800"
+                  max={parseInt(pageSettings.canvasWidth)}
                   value={positionX}
                   onChange={handlePositionXChange}
                 />
@@ -90,7 +94,7 @@ const TopPanel = ({ item,positionX, positionY, positionZ, color, itemText, itemI
                   id="positionY"
                   type="range"
                   min="0"
-                  max="600"
+                  max={parseInt(pageSettings.canvasHeight)}
                   value={positionY}
                   onChange={handlePositionYChange}
                 />
