@@ -247,8 +247,11 @@ setItems(
       console.error('Canvas reference is not available.');
     }
   };
-
-  
+const [typePanel, setTypePanel] = useState(null);
+  const GetpanelType =  (type) => {
+    //console.log(type); 
+    setTypePanel(type);
+  };
 
   
 
@@ -261,10 +264,10 @@ setItems(
         onSaveAsPNG={handleSaveAsPNG}
         onSaveAsPDF={handleSaveAsPDF} />
       <div className='bg-light d-flex flex-row overflow-auto'>
-      <LeftPanel onDragStart={handleDragStart} />
+      <LeftPanel panelType={GetpanelType} onDragStart={handleDragStart} />
       <div className='d-flex flex-column flex-grow-1'>
         {/* Pass updateItems function to Canvas */}
-        <CanvasTop items={items}></CanvasTop>
+        <CanvasTop typePanel={typePanel} items={items}></CanvasTop>
         <Canvas items={items} updateSetting={updateSettingFunc} onDrop={handleDrop} onRemoveItem={handleRemoveItem} onUpdateItems={updateItems} canvasRef={canvasRef} />
       </div>
       

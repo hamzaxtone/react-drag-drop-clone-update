@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import Layers from './Layers';
 
-const CanvasTop = ({items}) => {
+const CanvasTop = ({typePanel,items}) => {
+
+    useEffect(() => {
+        console.log(typePanel);
+      }, [typePanel]);
+
 // State for managing layers visibility
 const [showLayers, setShowLayers] = useState(false);
 const toggleLayers = () => {

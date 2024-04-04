@@ -17,6 +17,7 @@ const ChairSVG = () => (
   
 );
 
+
 const TableSVG = () => (
   <svg width="50" height="50" viewBox="0 0 24 24">
     <path fill="none" d="M0 0h24v24H0z" />
@@ -24,7 +25,14 @@ const TableSVG = () => (
   </svg>
 );
 
-const LeftPanel = ({ onDragStart }) => {
+const LeftPanel = ({ panelType,onDragStart }) => {
+  const OpenPanel = (type) => {
+    //console.log(type);
+    panelType(type);
+  };
+
+
+
   return (
     <>
     <section id='leftPanel' className="css-1ll1a4k leftPanel">
@@ -82,8 +90,8 @@ const LeftPanel = ({ onDragStart }) => {
             <span className="css-184r8y9">Image</span>
             </DraggableItem>
           </li>
-          {/* <li className="css-i9ow3q element">
-          <DraggableItem itemName="Draw" onDragStart={onDragStart}>
+          <li onClick={() => OpenPanel('Graphic')} className="css-i9ow3q element">
+          <DraggableItem itemName="Graphic" onDragStart={onDragStart}>
             <div className="css-16iqw5x">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1em" height="1em">
                 <path d="M192 116a12 12 0 1 1-12-12 12 12 0 0 1 12 12Zm-40-52h-40a8 8 0 0 0 0 16h40a8 8 0 0 0 0-16Zm96 48v32a24 24 0 0 1-24 24h-2.36l-16.21 45.38A16 16 0 0 1 190.36 224h-12.72a16 16 0 0 1-15.07-10.62l-1.92-5.38h-57.3l-1.92 5.38A16 16 0 0 1 86.36 224H73.64a16 16 0 0 1-15.07-10.62L46 178.22a87.69 87.69 0 0 1-21.44-48.38A16 16 0 0 0 16 144a8 8 0 0 1-16 0 32 32 0 0 1 24.28-31A88.12 88.12 0 0 1 112 32h104a8 8 0 0 1 0 16h-21.39a87.93 87.93 0 0 1 30.17 37c.43 1 .85 2 1.25 3A24 24 0 0 1 248 112Zm-16 0a8 8 0 0 0-8-8h-3.66a8 8 0 0 1-7.64-5.6A71.9 71.9 0 0 0 144 48h-32a72 72 0 0 0-53.09 120.64 8 8 0 0 1 1.64 2.71L73.64 208h12.72l3.82-10.69a8 8 0 0 1 7.53-5.31h68.58a8 8 0 0 1 7.53 5.31l3.82 10.69h12.72l18.11-50.69A8 8 0 0 1 216 152h8a8 8 0 0 0 8-8Z"></path>
@@ -92,6 +100,15 @@ const LeftPanel = ({ onDragStart }) => {
             <span className="css-184r8y9">Graphic</span>
             </DraggableItem>
           </li>
+          <li onClick={() => OpenPanel('Video')} className="css-i9ow3q element">
+            <div className="css-16iqw5x">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1em" height="1em">
+                <path d="m164.44 105.34-48-32A8 8 0 0 0 104 80v64a8 8 0 0 0 12.44 6.66l48-32a8 8 0 0 0 0-13.32ZM120 129.05V95l25.58 17ZM216 40H40a16 16 0 0 0-16 16v112a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 128H40V56h176v112Zm16 40a8 8 0 0 1-8 8H32a8 8 0 0 1 0-16h192a8 8 0 0 1 8 8Z"></path>
+              </svg>
+            </div>
+            <span className="css-184r8y9">Video</span>
+          </li>
+          {/* 
           <li className="css-i9ow3q element">
             <div className="css-16iqw5x">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" width="1em" height="1em">
