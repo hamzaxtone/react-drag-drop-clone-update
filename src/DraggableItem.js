@@ -1,9 +1,14 @@
 import React from 'react';
 
-const DraggableItem = ({ itemName, onDragStart, children }) => {
+const DraggableItem = ({ itemName,src, onDragStart, children }) => {
   const handleDragStart = (e) => {
     console.log(itemName);
     e.dataTransfer.setData('text', itemName);
+    if(src){
+      e.dataTransfer.setData('src', src);
+    }
+    
+    
     onDragStart(e, { name: itemName });
   };
 

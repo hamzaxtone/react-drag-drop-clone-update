@@ -80,14 +80,26 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
       const y = e.clientY - rect.top;
 
       
-      const updatedItems = items.map((item) =>
-        item === draggedItem ? { ...item, x, y } : item
-      );
+      // const updatedItems = items.map((item) =>
+      //   item === draggedItem ? { ...item, x, y } : item
+      // );
 
+      // onUpdateItems(updatedItems);
+      const updatedItems = items.map((itemGroup) => ({
+        ...itemGroup,
+        droppedItems: itemGroup.droppedItems.map((item) =>
+          item === draggedItem ? { ...item, x, y } : item
+        ),
+      }));
+  
       onUpdateItems(updatedItems); 
       setDraggedItem(null);
     } else {
       const itemName = e.dataTransfer.getData('text/plain');
+
+
+      const itemSrc = e.dataTransfer.getData('src');
+
       let itemPrice = 0; 
 
     
@@ -107,7 +119,7 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
         break;
     }
     
-    onDrop({ name: itemName, price: itemPrice, text: itemText, image: itemImage, x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
+    onDrop({ name: itemName, ...(itemSrc && { src: itemSrc }),  price: itemPrice, text: itemText, image: itemImage, x: e.nativeEvent.offsetX, y: e.nativeEvent.offsetY });
 
     }
   };
@@ -165,24 +177,45 @@ const Canvas = ({ items, updateSetting, onDrop, onRemoveItem, onUpdateItems ,can
     const rect = e.target.getBoundingClientRect();
     const offsetX = e.clientX - rect.left;
     const offsetY = e.clientY - rect.top;
-    const updatedItems = items.map((itm) =>
-      itm === item ? { ...itm, offsetX, offsetY } : itm
-    );
+    console.log("Offset X:", offsetX, "Offset Y:", offsetY);
+  
+    // Update the nested droppedItems array
+    const updatedItems = items.map((itemGroup) => ({
+      ...itemGroup,
+      droppedItems: itemGroup.droppedItems.map((itm) =>
+        itm === item ? { ...itm, offsetX, offsetY } : itm
+      ),
+    }));
+  
     onUpdateItems(updatedItems);
   };
   
   const handleMouseMove = (e) => {
     if (draggedItem) {
-      //console.log("Mouse move", e.clientX, e.clientY);
+      console.log("Mouse move", e.clientX, e.clientY);
       const rect = e.target.getBoundingClientRect();
       const x = e.clientX - rect.left - draggedItem.offsetX;
       const y = e.clientY - rect.top - draggedItem.offsetY;
-      const updatedItems = items.map((item) =>
-        item === draggedItem ? { ...item, x, y } : item
-      );
+      console.log("New position X:", x, "New position Y:", y);
+  
+      // Update the nested droppedItems array
+      const updatedItems = items.map((itemGroup) => ({
+        ...itemGroup,
+        droppedItems: itemGroup.droppedItems.map((item) =>
+          item === draggedItem ? { ...item, x, y } : item
+        ),
+      }));
+  
       onUpdateItems(updatedItems);
     }
   };
+  
+  
+  
+  
+ 
+  
+  
 
   const updateCanvasWidth = (e) => {
     //console.log(e.target.value);
@@ -323,7 +356,7 @@ const handleMouseUpResize = () => {
   return (
     <section id='Canvas' className='flex-grow-1 Canvas'>
       <div className='px-0'>
-         asdas
+         
         {selectedItem && 
       <TopPanel
         pageSettings={items[0].canvasSettings}
@@ -459,8 +492,8 @@ const handleMouseUpResize = () => {
           backgroundImage:`url(${canvasBGImage})`,
           height: items[0].canvasSettings.canvasHeight,
           border: '1px solid black',
-          cursor: 'pointer'
-          
+          cursor: drawSetting ? 'url(https://cdn4.iconfinder.com/data/icons/basic-ui-2-line/32/pencil-edit-write-draw-stationary-20.png) -50 -50, auto' : 'pointer'
+
         }}
         
         onDragOver={handleDragOver}
@@ -494,7 +527,7 @@ const handleMouseUpResize = () => {
               outlineOffset: selectedItem === item ? '-3px' : '0px',
               resize: resizing ? 'none' : 'both'
             }}
-            onMouseDown={(e) => handleMouseDownResize(e, item)}
+            //onMouseDown={(e) => handleMouseDownResize(e, item)}
           >
 
             
@@ -531,10 +564,21 @@ const handleMouseUpResize = () => {
                 <FontAwesomeIcon title={item.name} color={item.color} size='6x' icon={faTable} />
               )
               : item.name === 'Image' ? (
-                <img 
-                src={ item.image != "" ? item.image :'https://images.unsplash.com/photo-1709136494561-d98ea74c9431?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200' } 
-                 />
+                <>
+                {item.src ? (
+                  <img data-src={item.src} src={item.src} alt="Dynamic Image" />
+                ) : (
+                  <img
+                    src={
+                      item.image !== "" ?
+                        item.image :
+                        "https://images.unsplash.com/photo-1709136494561-d98ea74c9431?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=200"
+                    }
+                    alt="Static Image"
+                  />
+                )}
                 
+                </>
               )
               : item.name === 'Draw' ? (
                 <DrawingCanvas></DrawingCanvas>

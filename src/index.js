@@ -5,6 +5,7 @@ import './mainTop.css';
 import './leftPanel.css';
 import './CanvasTop.css';
 import './Layers.css';
+import './LeftPanelDetail.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Layers from './Layers';
 
 const CanvasTop = ({typePanel,items}) => {
 
     useEffect(() => {
         console.log(typePanel);
-      }, [typePanel]);
+    }, [typePanel]);
 
 // State for managing layers visibility
 const [showLayers, setShowLayers] = useState(false);
